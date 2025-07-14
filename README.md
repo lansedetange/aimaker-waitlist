@@ -36,9 +36,24 @@ cd aimaker-waitlist
 npm install
 ```
 
-### 3. 配置环境变量
+### 3. 数据库配置
 
-创建 `.env.local` 文件：
+#### 方案A: 使用Zeabur云数据库（推荐）
+
+项目已配置使用Zeabur云数据库，无需本地安装PostgreSQL：
+
+```bash
+# 直接使用Zeabur数据库启动（推荐）
+npm run dev:zeabur
+
+# 或者使用启动脚本
+./scripts/start-with-zeabur.sh    # macOS/Linux
+scripts\start-with-zeabur.bat     # Windows
+```
+
+#### 方案B: 使用本地PostgreSQL数据库
+
+如果你想使用本地数据库，创建 `.env.local` 文件：
 
 ```bash
 # PostgreSQL 数据库配置
@@ -52,9 +67,7 @@ DB_PASSWORD=your_password
 DATABASE_URL=postgresql://username:password@localhost:5432/aimaker_waitlist
 ```
 
-### 4. 设置PostgreSQL数据库
-
-确保PostgreSQL已安装并运行，然后创建数据库：
+然后设置本地PostgreSQL数据库：
 
 ```bash
 # 连接到PostgreSQL
@@ -68,15 +81,23 @@ CREATE USER your_username WITH PASSWORD 'your_password';
 GRANT ALL PRIVILEGES ON DATABASE aimaker_waitlist TO your_username;
 ```
 
-### 5. 初始化数据库表
+### 4. 数据库初始化
 
 ```bash
+# 使用Zeabur数据库初始化（推荐）
+npm run init-db:zeabur
+
+# 或使用本地数据库初始化
 npm run init-db
 ```
 
-### 6. 启动开发服务器
+### 5. 启动开发服务器
 
 ```bash
+# 使用Zeabur数据库启动（推荐）
+npm run dev:zeabur
+
+# 或使用本地数据库启动
 npm run dev
 ```
 
@@ -178,11 +199,22 @@ aimaker-waitlist/
 ## 📋 可用脚本
 
 ```bash
-npm run dev        # 启动开发服务器
-npm run build      # 构建生产版本
-npm run start      # 启动生产服务器
-npm run lint       # 运行ESLint检查
-npm run init-db    # 初始化数据库表
+# 开发服务器
+npm run dev              # 启动开发服务器（本地数据库）
+npm run dev:zeabur       # 启动开发服务器（Zeabur数据库）
+
+# 数据库管理
+npm run init-db          # 初始化数据库表（本地数据库）
+npm run init-db:zeabur   # 初始化数据库表（Zeabur数据库）
+
+# 构建和部署
+npm run build            # 构建生产版本
+npm run start            # 启动生产服务器
+npm run lint             # 运行ESLint检查
+
+# 便捷启动脚本
+./scripts/start-with-zeabur.sh    # macOS/Linux启动脚本
+scripts\start-with-zeabur.bat     # Windows启动脚本
 ```
 
 ## 🔧 配置说明
@@ -198,6 +230,15 @@ npm run init-db    # 初始化数据库表
 | DB_PASSWORD | 数据库密码 | (必填) |
 
 ## 📝 更新日志
+
+### v0.1.1 (2024-01-01)
+
+- 🚀 **Zeabur云数据库集成**: 配置真实的云数据库连接
+- ✅ **DATABASE_URL支持**: 支持连接字符串和环境变量配置
+- ✅ **SSL连接支持**: 自动适配云数据库的SSL要求
+- ✅ **便捷启动脚本**: 添加macOS/Linux和Windows启动脚本
+- ✅ **双重数据库支持**: 同时支持本地和云数据库配置
+- 📝 **文档完善**: 更新使用说明和配置指南
 
 ### v0.1.0 (2024-01-01)
 

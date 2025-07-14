@@ -1,13 +1,22 @@
 const { Pool } = require('pg')
 
 // 数据库连接配置
-const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'aimaker_waitlist',
-  password: process.env.DB_PASSWORD || '',
-  port: parseInt(process.env.DB_PORT || '5432'),
-})
+// 优先使用DATABASE_URL，如果没有则使用分开的环境变量
+const pool = new Pool(
+  process.env.DATABASE_URL 
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        // SSL配置（Zeabur等云数据库通常需要）
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      }
+    : {
+        user: process.env.DB_USER || 'postgres',
+        host: process.env.DB_HOST || 'localhost',
+        database: process.env.DB_NAME || 'aimaker_waitlist',
+        password: process.env.DB_PASSWORD || '',
+        port: parseInt(process.env.DB_PORT || '5432'),
+      }
+)
 
 async function initializeDatabase() {
   console.log('开始初始化数据库...')

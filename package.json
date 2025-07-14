@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init-db": "node scripts/init-db.js"
+    "init-db": "node scripts/init-db.js",
+    "dev:zeabur": "DATABASE_URL='postgresql://root:7bS386kwINCh4KMaOWE209QsPj1BFrp5@cgk1.clusters.zeabur.com:32171/zeabur' npm run dev",
+    "init-db:zeabur": "DATABASE_URL='postgresql://root:7bS386kwINCh4KMaOWE209QsPj1BFrp5@cgk1.clusters.zeabur.com:32171/zeabur' npm run init-db"
   },
   "dependencies": {
     "@types/pg": "^8.15.4",
