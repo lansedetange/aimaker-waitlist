@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from 'react'
+import type { WaitlistFormSuccessData } from '@/types/waitlist'
 
 interface WaitlistFormProps {
-  onSuccess?: (data: any) => void
+  onSuccess?: (data: WaitlistFormSuccessData) => void
 }
 
 export function WaitlistForm({ onSuccess }: WaitlistFormProps) {

@@ -1,4 +1,5 @@
 import { Pool } from 'pg'
+import type { QueryParam, QueryResult, DatabaseError, DatabaseStatsResult } from '@/types/waitlist'
 
 // 数据库连接池配置
 // 优先使用DATABASE_URL，如果没有则使用分开的环境变量
@@ -27,7 +28,7 @@ const pool = new Pool(
 )
 
 // 数据库查询函数
-export async function query(text: string, params?: any[]) {
+export async function query(text: string, params?: QueryParam[]): Promise<QueryResult> {
   const client = await pool.connect()
   try {
     const result = await client.query(text, params)
@@ -72,9 +73,10 @@ export async function addEmailToWaitlist(email: string, ipAddress?: string, user
   try {
     const result = await query(insertQuery, [email, ipAddress, userAgent])
     return result.rows[0]
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const dbError = error as DatabaseError
     // 检查是否是重复邮箱错误
-    if (error.code === '23505') {
+    if (dbError.code === '23505') {
       throw new Error('Email already exists in waitlist')
     }
     throw error
@@ -82,7 +84,7 @@ export async function addEmailToWaitlist(email: string, ipAddress?: string, user
 }
 
 // 获取waitlist统计信息
-export async function getWaitlistStats() {
+export async function getWaitlistStats(): Promise<DatabaseStatsResult> {
   const statsQuery = `
     SELECT 
       COUNT(*) as total_emails,
@@ -92,7 +94,7 @@ export async function getWaitlistStats() {
   
   try {
     const result = await query(statsQuery)
-    return result.rows[0]
+    return result.rows[0] as unknown as DatabaseStatsResult
   } catch (error) {
     console.error('获取waitlist统计失败:', error)
     throw error

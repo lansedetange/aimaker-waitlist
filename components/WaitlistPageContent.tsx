@@ -8,7 +8,7 @@ export function WaitlistPageContent() {
   const [refreshStats, setRefreshStats] = useState(0)
 
   // 处理表单提交成功后的操作
-  const handleFormSuccess = (data: any) => {
+  const handleFormSuccess = () => {
     // 刷新统计数据
     setRefreshStats(prev => prev + 1)
   }

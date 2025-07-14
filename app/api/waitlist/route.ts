@@ -52,11 +52,13 @@ export async function POST(request: NextRequest) {
       }
     }, { status: 201 })
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('API错误:', error)
     
+    const err = error as Error & { code?: string }
+    
     // 处理重复邮箱错误
-    if (error.message === 'Email already exists in waitlist') {
+    if (err.message === 'Email already exists in waitlist') {
       return NextResponse.json(
         { error: 'Email already registered in waitlist' },
         { status: 409 }
@@ -64,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
     
     // 处理数据库连接错误
-    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+    if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
       return NextResponse.json(
         { error: 'Database connection failed. Please try again later.' },
         { status: 503 }
@@ -96,7 +98,7 @@ export async function GET() {
       }
     })
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('获取统计信息错误:', error)
     
     return NextResponse.json(
